@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OkCredit | Recommend</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><nav><a class="brand" href="/">OkCredit</a><a href="/">Home</a></nav><main class="panel"><p class="eyebrow">CARD MATCH</p><h1>Tell us about your purchase</h1><p class="lead">We'll match the category with a sample rewards card.</p>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<form method="post" action="/recommend"><label for="category">Spending category</label><select id="category" name="category" required><option value="Food">Food</option><option value="Shopping">Shopping</option><option value="Travel">Travel</option></select><label for="amount">Purchase amount (₹)</label><input id="amount" name="amount" type="number" min="1" step="0.01" placeholder="e.g. 2500" required><button class="button" type="submit">Find My Card</button></form><p class="note">This demo uses fixed sample cashback rates, not live financial advice.</p></main><footer>OkCredit · Educational demo</footer></body></html>

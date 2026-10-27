@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OkCredit | Result</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><nav><a class="brand" href="/">OkCredit</a><a href="/recommend">Try Again</a></nav><main class="panel result-panel"><p class="eyebrow">YOUR SAMPLE RECOMMENDATION</p><h1>Best match for {{ category }}</h1>
+<div class="result-card"><span class="chip">{{ category }}</span><h2>{{ card.name }}</h2><p class="rate">{{ card.cashback }}% <small>sample cashback</small></p><div class="summary"><span>Purchase amount</span><strong>₹{{ "%.2f"|format(amount) }}</strong></div><div class="summary"><span>Estimated reward</span><strong>₹{{ "%.2f"|format(reward) }}</strong></div></div>
+<a class="button" href="/recommend">Recommend Another</a><p class="note">Illustrative calculation only. Actual card terms, caps, and eligibility may differ.</p></main><footer>OkCredit · Educational demo</footer></body></html>

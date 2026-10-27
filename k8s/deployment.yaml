@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: okcredit-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: okcredit
+  template:
+    metadata:
+      labels:
+        app: okcredit
+    spec:
+      containers:
+        - name: okcredit
+          # Must match the repository in Jenkinsfile.
+          image: swathi1276/okcredit-recommender:latest
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
