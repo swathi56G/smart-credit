@@ -1,14 +1,16 @@
+
 pipeline {
     agent any
 
     environment {
-        // Replace this with your Docker Hub username/repository.
         DOCKERHUB_REPO = 'swathi1276/okcredit-recommender'
     }
 
     stages {
         stage('Checkout') {
-            steps { checkout scm }
+            steps {
+                checkout scm
+            }
         }
 
         stage('Build Docker Image') {
@@ -18,16 +20,22 @@ pipeline {
             }
         }
 
-        // Add Jenkins Username/Password credential ID: dockerhub-creds.
-        // Use a Docker Hub access token as the password.
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'swathi1276', passwordVariable: 'Docker@123')]) {
-                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
-                    bat 'docker push %DOCKERHUB_REPO%:%BUILD_NUMBER%'
-                    bat 'docker push %DOCKERHUB_REPO%:latest'
-                    bat 'docker logout'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat '''
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        if errorlevel 1 exit /b 1
+                        docker push %DOCKERHUB_REPO%:%BUILD_NUMBER%
+                        if errorlevel 1 exit /b 1
+                        docker push %DOCKERHUB_REPO%:latest
+                        if errorlevel 1 exit /b 1
+                        docker logout
+                    '''
                 }
             }
         }
@@ -44,7 +52,11 @@ pipeline {
     }
 
     post {
-        success { echo 'OkCredit built, pushed, and deployed to Kubernetes.' }
-        failure { echo 'Pipeline failed. Check the first failed stage in Console Output.' }
+        success {
+            echo 'OkCredit built, pushed, and deployed to Kubernetes.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the first failed stage in Console Output.'
+        }
     }
 }
